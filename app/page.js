@@ -29,7 +29,7 @@ export default async function Home() {
             {totalGenerasi} Generasi • {totalAnggota} Anggota
           </p>
 
-          <div className="mt-4 flex gap-3">
+          <div className="hidden">
 
             <Link
               href="/cabang"
