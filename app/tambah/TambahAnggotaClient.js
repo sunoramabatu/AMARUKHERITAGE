@@ -24,13 +24,12 @@ export default function TambahAnggota() {
 
     const orangtuaParam = params.get("orangtua");
     const pasanganParam = params.get("pasangan");
+    const modeTambahAnak = !!orangtuaParam;
+    const modeTambahPasangan = !!pasanganParam;
 
     
 
     useEffect(()=>{
-
-        const modeTambahAnak = !!orangtuaParam;
-        const modeTambahPasangan = !!pasanganParam;
 
         if(orangtuaParam){
         setAyahId(orangtuaParam)
@@ -79,7 +78,7 @@ export default function TambahAnggota() {
   async function ambilOrangtua() {
     const { data } = await supabase
       .from("anggota")
-      .select("id,nama,generasi");
+      .select("id,nama,generasi,jk")
 
     setDaftarOrangtua(data || []);
   }
@@ -93,7 +92,7 @@ if (ayahId) {
 const { data: ortu } = await supabase
 .from("anggota")
 .select("generasi")
-.eq("id", orangtuaId)
+.eq("id", ayahId)
 .single();
 
 if (ortu) generasiBaru = ortu.generasi + 1;
@@ -246,15 +245,7 @@ window.location.href="/";
 
             )}
 
-            <option value="">Nama Pasangan</option>
-
-              {daftarOrangtua.map((o) => (
-              <option key={o.id} value={o.id}>
-                {o.nama}
-              </option>
-            ))}
-
-          {modeTambahAnak && (
+            {modeTambahAnak && (
 
             <>
 
