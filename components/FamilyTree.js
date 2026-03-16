@@ -1,0 +1,310 @@
+"use client";
+
+import { useEffect, useRef } from "react";
+import * as d3 from "d3";
+import { useState } from "react";
+import EditAnggotaModal from "../components/EditAnggotaModal";
+
+export default function FamilyTree({ keluarga }) {
+
+const [selectedAnggota, setSelectedAnggota] = useState(null);
+const svgRef = useRef(null);
+
+useEffect(()=>{
+
+if(!keluarga || keluarga.length===0) return;
+
+const svg=d3.select(svgRef.current);
+svg.selectAll("*").remove();
+
+const g=svg.append("g");
+
+// ZOOM
+svg.call(
+d3.zoom()
+.scaleExtent([0.3,2])
+.on("zoom",(e)=>{
+g.attr("transform",e.transform)
+})
+);
+
+// =================
+// CONFIG
+// =================
+
+const CARD_W = 200
+const CARD_H = 190
+const PHOTO = 120
+const COUPLE_GAP = 40
+
+// =================
+// MAP BY ID
+// =================
+
+const byId={}
+keluarga.forEach(p=>{byId[p.id]=p})
+
+// =================
+// ROOT (AMARI RUKMINI)
+// =================
+
+const amari = keluarga.find(x=>x.nama?.toLowerCase()==="amari")
+const rukmini = keluarga.find(x=>x.nama?.toLowerCase()==="rukmini")
+
+if(!amari || !rukmini) return
+
+const rootData={
+type:"couple",
+suami:amari,
+istri:rukmini,
+children:[]
+}
+
+// =================
+// BUILD CHILD MAP
+// =================
+
+const childrenMap={}
+
+keluarga.forEach(p=>{
+
+if(!p.orangtua_id) return
+
+if(!childrenMap[p.orangtua_id])
+childrenMap[p.orangtua_id]=[]
+
+childrenMap[p.orangtua_id].push(p)
+
+})
+
+// =================
+// BUILD TREE
+// =================
+
+function buildNode(person){
+
+const spouseId =
+person.pasangan_id ||
+keluarga.find(x=>x.pasangan_id===person.id)?.id
+
+let node
+
+if(spouseId){
+
+const spouse = byId[spouseId]
+
+node={
+type:"couple",
+suami:person,
+istri:spouse,
+children:[]
+}
+
+}else{
+
+node={
+type:"single",
+person:person,
+children:[]
+}
+
+}
+
+const kids = childrenMap[person.id] || []
+
+kids.forEach(child=>{
+node.children.push(buildNode(child))
+})
+
+return node
+
+}
+
+// build root children
+const rootKids = childrenMap[amari.id] || []
+
+rootKids.forEach(child=>{
+rootData.children.push(buildNode(child))
+})
+
+// =================
+// D3 TREE
+// =================
+
+const root=d3.hierarchy(rootData)
+
+const tree=d3.tree()
+.nodeSize([420,260])
+
+tree(root)
+
+// =================
+// LINKS
+// =================
+
+g.selectAll("path")
+.data(root.links())
+.enter()
+.append("path")
+.attr("fill","none")
+.attr("stroke","#444")
+.attr("stroke-width",2)
+.attr("d",d=>{
+
+const sx=d.source.x
+const sy=d.source.y
+
+const tx=d.target.x
+const ty=d.target.y
+
+// tengah pasangan
+const parentY = sy
+
+// garis horizontal anak
+const horizontalY = ty - CARD_H/2 - 25
+
+// atas kotak anak
+const childTop = ty - CARD_H/2
+
+return `
+M ${sx},${parentY}
+V ${horizontalY}
+H ${tx}
+V ${childTop}
+`
+
+})
+
+// =================
+// NODE GROUP
+// =================
+
+const node=g.selectAll(".node")
+.data(root.descendants())
+.enter()
+.append("g")
+.attr("transform",d=>`translate(${d.x},${d.y})`)
+
+
+// =================
+// DRAW CARD
+// =================
+
+function drawPerson(group,person,xOffset){
+  
+group.on("click", () => {
+setSelectedAnggota(person);
+});
+
+group.append("rect")
+.attr("x",xOffset-CARD_W/2)
+.attr("y",-CARD_H/2)
+.attr("width",CARD_W)
+.attr("height",CARD_H)
+.attr("rx",14)
+.attr("fill","#fff")
+.attr("stroke","#2E7D32")
+.attr("stroke-width",2)
+
+group.append("image")
+.attr("href", person.foto ? person.foto + "?t=" + Date.now() : "/avatar.png")
+.attr("x",xOffset-PHOTO/2)
+.attr("y",-CARD_H/2+10)
+.attr("width",PHOTO)
+.attr("height",PHOTO)
+.attr("preserveAspectRatio","xMidYMid slice")
+
+const name=group.append("text")
+.attr("x",xOffset)
+.attr("y",PHOTO/2)
+.attr("text-anchor","middle")
+.attr("font-size",13)
+.attr("font-weight","bold")
+
+const words=person.nama.split(" ")
+let line=[]
+let tspan=name.append("tspan").attr("x",xOffset).attr("dy",0)
+
+words.forEach(w=>{
+
+line.push(w)
+tspan.text(line.join(" "))
+
+if(tspan.node().getComputedTextLength()>CARD_W-20){
+
+line.pop()
+tspan.text(line.join(" "))
+line=[w]
+
+tspan=name.append("tspan")
+.attr("x",xOffset)
+.attr("dy",15)
+.text(w)
+
+}
+
+})
+
+group.append("text")
+.attr("x",xOffset)
+.attr("y",CARD_H/2-5)
+.attr("text-anchor","middle")
+.attr("font-size",12)
+.attr("fill","#666")
+.text(person.tahun_lahir || "")
+
+}
+
+// =================
+// RENDER NODE
+// =================
+
+node.each(function(d){
+
+const group=d3.select(this)
+
+if(d.data.type==="couple"){
+
+drawPerson(group,d.data.suami,-(CARD_W/2+COUPLE_GAP/2))
+drawPerson(group,d.data.istri,(CARD_W/2+COUPLE_GAP/2))
+
+group.append("line")
+.attr("x1",-COUPLE_GAP/2)
+.attr("y1",0)
+.attr("x2",COUPLE_GAP/2)
+.attr("y2",0)
+.attr("stroke","#444")
+.attr("stroke-width",2)
+
+}
+
+if(d.data.type==="single"){
+
+drawPerson(group,d.data.person,0)
+
+}
+
+})
+
+},[keluarga])
+
+return(
+
+<div className="w-screen h-[calc(100vh-120px)] bg-[#F4EFE6]">
+
+<svg
+ref={svgRef}
+width="100%"
+height="100%"
+/>
+{selectedAnggota && (
+  <EditAnggotaModal
+    anggota={selectedAnggota}
+    onClose={() => setSelectedAnggota(null)}
+  />
+)}
+</div>
+
+)
+
+}
