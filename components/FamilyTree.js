@@ -165,7 +165,12 @@ rootData.children.push(buildNode(child))
 // D3 TREE
 // =================
 
+const root = d3.hierarchy(rootData)
 
+const treeLayout = d3.tree()
+.nodeSize([300,260])
+
+treeLayout(root)
 
 // AUTO CENTER TREE
 
