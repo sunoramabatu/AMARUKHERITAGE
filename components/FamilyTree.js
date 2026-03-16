@@ -38,11 +38,44 @@ const PHOTO = 120
 const COUPLE_GAP = 40
 
 // =================
-// MAP BY ID
+// FAST DATA MAP
 // =================
 
-const byId={}
-keluarga.forEach(p=>{byId[p.id]=p})
+const byId = {}
+const spouseMap = {}
+const childrenMap = {}
+
+keluarga.forEach(p=>{
+
+byId[p.id] = p
+
+// pasangan dua arah otomatis
+if(p.pasangan_id){
+spouseMap[p.id] = p.pasangan_id
+spouseMap[p.pasangan_id] = p.id
+}
+
+// anak dari ayah
+if(p.ayah_id){
+
+if(!childrenMap[p.ayah_id])
+childrenMap[p.ayah_id] = []
+
+childrenMap[p.ayah_id].push(p)
+
+}
+
+// anak dari ibu
+if(p.ibu_id){
+
+if(!childrenMap[p.ibu_id])
+childrenMap[p.ibu_id] = []
+
+childrenMap[p.ibu_id].push(p)
+
+}
+
+})
 
 // =================
 // ROOT (AMARI RUKMINI)
@@ -83,9 +116,7 @@ childrenMap[p.orangtua_id].push(p)
 
 function buildNode(person){
 
-const spouseId =
-person.pasangan_id ||
-keluarga.find(x=>x.pasangan_id===person.id)?.id
+const spouseId = spouseMap[person.id]
 
 let node
 
@@ -137,12 +168,12 @@ rootData.children.push(buildNode(child))
 // D3 TREE
 // =================
 
-const root=d3.hierarchy(rootData)
+// AUTO CENTER TREE
 
-const tree=d3.tree()
-.nodeSize([420,260])
+const svgWidth = window.innerWidth
+const xOffset = svgWidth / 2
 
-tree(root)
+g.attr("transform", `translate(${xOffset},80)`)
 
 // =================
 // LINKS
