@@ -20,15 +20,17 @@ export default function TambahAnggota() {
   const [ayahId,setAyahId] = useState("")
   const [ibuId,setIbuId] = useState("")
  
-  const params = useSearchParams();
-
-    const pasanganParam = params.get("pasangan");
-    const modeTambahAnak = !!orangtuaParam;
-    const modeTambahPasangan = !!pasanganParam;
     const [orangTuaData,setOrangTuaData] = useState(null)
     const [pasanganData,setPasanganData] = useState(null)
-    const orangtuaParam = params.get("orangtua");
+   
+   const params = useSearchParams();
 
+const orangtuaParam = params.get("orangtua");
+const pasanganParam = params.get("pasangan");
+
+const modeTambahAnak = !!orangtuaParam;
+const modeTambahPasangan = !!pasanganParam;
+   
         useEffect(() => {
 
         if(!orangtuaParam) return;
