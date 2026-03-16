@@ -164,6 +164,7 @@ rootData.children.push(buildNode(child))
 // =================
 // D3 TREE
 // =================
+const root = d3.hierarchy(rootData)
 
 const treeLayout = d3.tree()
 .nodeSize([420,320])
@@ -176,7 +177,7 @@ treeLayout(root)
 // AUTO CENTER TREE
 
 const svgWidth = window.innerWidth
-const xOffset = svgWidth / 2
+const xOffset = svgWidth / 2 - 200
 
 g.attr("transform", `translate(${xOffset},80)`)
 
