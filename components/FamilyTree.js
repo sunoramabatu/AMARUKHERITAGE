@@ -94,23 +94,6 @@ children:[]
 }
 
 // =================
-// BUILD CHILD MAP
-// =================
-
-const childrenMap={}
-
-keluarga.forEach(p=>{
-
-if(!p.orangtua_id) return
-
-if(!childrenMap[p.orangtua_id])
-childrenMap[p.orangtua_id]=[]
-
-childrenMap[p.orangtua_id].push(p)
-
-})
-
-// =================
 // BUILD TREE
 // =================
 
@@ -229,8 +212,6 @@ const node=g.selectAll(".node")
 
 function drawPerson(group,person,xOffset){
   
-
-
 const card = group.append("rect")
 .attr("x",xOffset-CARD_W/2)
 .attr("y",-CARD_H/2)
