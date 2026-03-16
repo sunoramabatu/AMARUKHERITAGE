@@ -110,7 +110,10 @@ children:[]
 
 }
 
-const kids = childrenMap[person.id] || []
+const kids = [
+...(childrenMap[person.id] || []),
+...(spouseId ? (childrenMap[spouseId] || []) : [])
+]
 
 kids.forEach(child=>{
 node.children.push(buildNode(child))
