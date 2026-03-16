@@ -20,8 +20,28 @@ export default function TambahAnggota() {
   const [ayahId,setAyahId] = useState("")
   const [ibuId,setIbuId] = useState("")
  
-    const [orangTuaData,setOrangTuaData] = useState(null)
-    const [pasanganData,setPasanganData] = useState(null)
+const [orangTuaData,setOrangTuaData] = useState(null)
+
+const [pasanganData,setPasanganData] = useState(null)
+        useEffect(()=>{
+
+        async function ambilPasangan(){
+
+        if(!pasanganParam) return
+
+        const { data } = await supabase
+        .from("anggota")
+        .select("nama")
+        .eq("id", pasanganParam)
+        .single()
+
+        setPasanganData(data)
+
+        }
+
+        ambilPasangan()
+
+        },[pasanganParam])
    
    const params = useSearchParams();
 
@@ -208,7 +228,9 @@ window.location.href="/";
             onChange={(e)=>setPasanganId(e.target.value)}
             >
 
-            <option value="">Nama Pasangan</option>
+          <option value="">
+            {pasanganData ? `Pasangan untuk: ${pasanganData.nama}` : "Nama Pasangan"}
+            </option>
 
             {daftarOrangtua.map((o)=>(
             <option key={o.id} value={o.id}>
@@ -262,6 +284,14 @@ window.location.href="/";
             >
             Simpan Anggota
             </button>
+
+            <button
+                type="button"
+                onClick={()=> window.history.back()}
+                className="w-full bg-gray-500 text-white font-semibold py-3 rounded-lg mt-2"
+                >
+                Tutup
+                </button>
 
           {imageSrc && (
 
