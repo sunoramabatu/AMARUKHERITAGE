@@ -13,6 +13,23 @@ export default function TambahAnggota() {
   const [jk, setJk] = useState("L");
   const [tahunLahir, setTahunLahir] = useState("");
   const [daftarOrangtua, setDaftarOrangtua] = useState([]);
+  
+  useEffect(()=>{
+
+        async function ambilAnggota(){
+
+        const { data } = await supabase
+        .from("anggota")
+        .select("id,nama")
+
+        setDaftarOrangtua(data || [])
+
+        }
+
+        ambilAnggota()
+
+        },[])
+  
   const [imageSrc,setImageSrc] = useState(null);
   const [croppedBlob,setCroppedBlob] = useState(null);
   const [preview,setPreview] = useState(null);
@@ -45,11 +62,17 @@ const [pasanganData,setPasanganData] = useState(null)
    
    const params = useSearchParams();
 
-const orangtuaParam = params.get("orangtua");
-const pasanganParam = params.get("pasangan");
+    const orangtuaParam = params.get("orangtua");
 
-const modeTambahAnak = !!orangtuaParam;
-const modeTambahPasangan = !!pasanganParam;
+    const pasanganParam = params.get("pasangan");
+    useEffect(()=>{
+    if(pasanganParam){
+        setPasanganId(pasanganParam)
+    }
+    },[pasanganParam])
+
+    const modeTambahAnak = !!orangtuaParam;
+    const modeTambahPasangan = !!pasanganParam;
    
         useEffect(() => {
 
@@ -229,7 +252,7 @@ window.location.href="/";
             >
 
           <option value="">
-            {pasanganData ? `Pasangan untuk: ${pasanganData.nama}` : "Nama Pasangan"}
+            {pasanganData ? `Pasangan untuk ${pasanganData.nama}` : "Nama Pasangan"}
             </option>
 
             {daftarOrangtua.map((o)=>(
