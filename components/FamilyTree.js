@@ -95,8 +95,8 @@ const spouse = byId[spouseId]
 
 node={
 type:"couple",
-suami:person,
-istri:spouse,
+suami: person.jk==="L" ? person : spouse,
+istri: person.jk==="P" ? person : spouse,
 children:[]
 }
 
@@ -192,11 +192,9 @@ const node=g.selectAll(".node")
 
 function drawPerson(group,person,xOffset){
   
-group.on("click", () => {
-setSelectedAnggota(person);
-});
 
-group.append("rect")
+
+const card = group.append("rect")
 .attr("x",xOffset-CARD_W/2)
 .attr("y",-CARD_H/2)
 .attr("width",CARD_W)
@@ -205,6 +203,10 @@ group.append("rect")
 .attr("fill","#fff")
 .attr("stroke","#2E7D32")
 .attr("stroke-width",2)
+.style("cursor","pointer")
+.on("click", () => {
+setSelectedAnggota(person);
+});
 
 group.append("image")
 .attr("href", person.foto ? person.foto + "?t=" + Date.now() : "/avatar.png")
@@ -213,6 +215,10 @@ group.append("image")
 .attr("width",PHOTO)
 .attr("height",PHOTO)
 .attr("preserveAspectRatio","xMidYMid slice")
+.style("cursor","pointer")
+.on("click", () => {
+setSelectedAnggota(person);
+});
 
 const name=group.append("text")
 .attr("x",xOffset)
