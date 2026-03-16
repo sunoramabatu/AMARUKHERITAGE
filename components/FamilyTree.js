@@ -124,7 +124,10 @@ return node
 }
 
 // build root children
-const rootKids = childrenMap[amari.id] || []
+const rootKids = [
+...(childrenMap[amari.id] || []),
+...(childrenMap[rukmini.id] || [])
+]
 
 rootKids.forEach(child=>{
 rootData.children.push(buildNode(child))

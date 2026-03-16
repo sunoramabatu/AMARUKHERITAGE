@@ -12,13 +12,14 @@ export default function TambahAnggota() {
   const [nama, setNama] = useState("");
   const [jk, setJk] = useState("L");
   const [tahunLahir, setTahunLahir] = useState("");
-  
   const [daftarOrangtua, setDaftarOrangtua] = useState([]);
   const [imageSrc,setImageSrc] = useState(null);
   const [croppedBlob,setCroppedBlob] = useState(null);
   const [preview,setPreview] = useState(null);
   const [orangtuaId,setOrangtuaId] = useState("");
   const [pasanganId,setPasanganId] = useState("");
+  const [ayahId,setAyahId] = useState("")
+  const [ibuId,setIbuId] = useState("")
 
   const params = useSearchParams();
 
@@ -97,7 +98,8 @@ const { data, error } = await supabase
 nama: nama,
 jk: jk,
 tahun_lahir: parseInt(tahunLahir),
-orangtua_id: orangtuaId || null,
+ayah_id: ayahId || null,
+ibu_id: ibuId || null,
 pasangan_id: pasanganId || null,
 generasi: generasiBaru
 }
@@ -170,19 +172,39 @@ window.location.href="/";
 
           <select
             className="w-full border p-2 rounded"
-            value={orangtuaId}
-            onChange={(e) => setOrangtuaId(e.target.value)}
-          >
+            value={ayahId}
+            onChange={(e)=>setAyahId(e.target.value)}
+            >
 
-            <option value="">Nama Orang Tua</option>
+            <option value="">Pilih Ayah</option>
 
-            {daftarOrangtua.map((o) => (
-              <option key={o.id} value={o.id}>
-                {o.nama} (Gen {o.generasi})
-              </option>
+            {daftarOrangtua
+            .filter(o=>o.jk==="L")
+            .map(o=>(
+            <option key={o.id} value={o.id}>
+            {o.nama}
+            </option>
             ))}
 
-          </select>
+            </select>
+
+            <select
+                className="w-full border p-2 rounded"
+                value={ayahId}
+                onChange={(e)=>setAyahId(e.target.value)}
+                >
+
+                <option value="">Pilih Ayah</option>
+
+                {daftarOrangtua
+                .filter(o=>o.jk==="L")
+                .map(o=>(
+                <option key={o.id} value={o.id}>
+                {o.nama}
+                </option>
+                ))}
+
+                </select>
 
           {/* PILIH PASANGAN */}
 
