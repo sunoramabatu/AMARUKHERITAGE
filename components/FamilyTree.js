@@ -96,8 +96,17 @@ children:[]
 // =================
 // BUILD TREE
 // =================
-
+const visited = new Set()
 function buildNode(person){
+
+if(!person) return null
+
+// cegah infinite loop
+if(visited.has(person.id)){
+return null
+}
+
+visited.add(person.id)
 
 const spouseId = spouseMap[person.id]
 
@@ -109,8 +118,8 @@ const spouse = byId[spouseId]
 
 node={
 type:"couple",
-suami: person.jk==="L" ? person : spouse,
-istri: person.jk==="P" ? person : spouse,
+suami:person,
+istri:spouse,
 children:[]
 }
 
@@ -124,17 +133,22 @@ children:[]
 
 }
 
-const kids = [
-...(childrenMap[person.id] || []),
-...(spouseId ? (childrenMap[spouseId] || []) : [])
-]
+// ambil anak dari ayah / ibu
+const kids = childrenMap[person.id] || []
 
 kids.forEach(child=>{
-node.children.push(buildNode(child))
+
+if(!visited.has(child.id)){
+const childNode = buildNode(child)
+
+if(childNode){
+node.children.push(childNode)
+}
+}
+
 })
 
 return node
-
 }
 
 // build root children
@@ -151,12 +165,7 @@ rootData.children.push(buildNode(child))
 // D3 TREE
 // =================
 
-const root = d3.hierarchy(rootData)
 
-const treeLayout = d3.tree()
-.nodeSize([300,260])
-
-treeLayout(root)
 
 // AUTO CENTER TREE
 
