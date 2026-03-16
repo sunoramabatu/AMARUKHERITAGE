@@ -170,42 +170,21 @@ window.location.href="/";
 
           {/* PILIH ORANG TUA */}
 
-          <select
-            className="w-full border p-2 rounded"
-            value={ayahId}
-            onChange={(e)=>setAyahId(e.target.value)}
-            >
-
-            <option value="">Pilih Ayah</option>
-
-            {daftarOrangtua
-            .filter(o=>o.jk==="L")
+          {daftarOrangtua
+            .filter(o=>o.jk?.toLowerCase().includes("l"))
             .map(o=>(
             <option key={o.id} value={o.id}>
             {o.nama}
             </option>
             ))}
 
-            </select>
-
-            <select
-                className="w-full border p-2 rounded"
-                value={ibuId}
-                onChange={(e)=>setIbuId(e.target.value)}
-                >
-
-                <option value="">Pilih Ibu</option>
-
-                {daftarOrangtua
-                .filter(o=>o.jk==="P")
+        {daftarOrangtua
+                .filter(o=>o.jk?.toLowerCase().includes("p"))
                 .map(o=>(
                 <option key={o.id} value={o.id}>
                 {o.nama}
                 </option>
                 ))}
-
-                </select>
-
           {/* PILIH PASANGAN */}
 
            {pasanganId && (

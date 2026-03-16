@@ -2,6 +2,8 @@ import { supabase } from "../lib/supabase";
 import Link from "next/link";
 import FamilyTreeWrapper from "../components/FamilyTreeWrapper";
 
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
 
   const { data: keluarga } = await supabase
