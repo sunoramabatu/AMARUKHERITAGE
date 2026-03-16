@@ -16,22 +16,26 @@ export default function TambahAnggota() {
   const [imageSrc,setImageSrc] = useState(null);
   const [croppedBlob,setCroppedBlob] = useState(null);
   const [preview,setPreview] = useState(null);
-  const [orangtuaId,setOrangtuaId] = useState("");
   const [pasanganId,setPasanganId] = useState("");
   const [ayahId,setAyahId] = useState("")
   const [ibuId,setIbuId] = useState("")
-
+ 
   const params = useSearchParams();
 
     useEffect(() => {
 
-      const orangtua = params.get("orangtua");
-      const pasangan = params.get("pasangan");
+        const orangtua = params.get("orangtua");
+        const pasangan = params.get("pasangan");
 
-      if(orangtua) setOrangtuaId(orangtua);
-      if(pasangan) setPasanganId(pasangan);
+        if(ayahId){
+        setAyahId(orangtua)
+        }
 
-    }, [params]);
+        if(pasangan){
+        setPasanganId(pasangan)
+        }
+
+        }, [params]);
   
   function handleFile(e){
 
@@ -80,7 +84,7 @@ e.preventDefault();
 
 let generasiBaru = 1;
 
-if (orangtuaId) {
+if (ayahId) {
 const { data: ortu } = await supabase
 .from("anggota")
 .select("generasi")
@@ -170,21 +174,45 @@ window.location.href="/";
 
           {/* PILIH ORANG TUA */}
 
-          {daftarOrangtua
-            .filter(o=>o.jk?.toLowerCase().includes("l"))
+          <label className="font-semibold">Pilih Ayah</label>
+
+            <select
+            className="w-full border p-2 rounded"
+            value={ayahId}
+            onChange={(e)=>setAyahId(e.target.value)}
+            >
+
+            <option value="">Pilih Ayah</option>
+
+            {daftarOrangtua
+            .filter(o=>o.jk==="L")
             .map(o=>(
             <option key={o.id} value={o.id}>
             {o.nama}
             </option>
             ))}
 
-        {daftarOrangtua
-                .filter(o=>o.jk?.toLowerCase().includes("p"))
-                .map(o=>(
-                <option key={o.id} value={o.id}>
-                {o.nama}
-                </option>
-                ))}
+            </select>
+
+            <label className="font-semibold">Pilih Ibu</label>
+
+            <select
+            className="w-full border p-2 rounded"
+            value={ibuId}
+            onChange={(e)=>setIbuId(e.target.value)}
+            >
+
+            <option value="">Pilih Ibu</option>
+
+            {daftarOrangtua
+            .filter(o=>o.jk==="P")
+            .map(o=>(
+            <option key={o.id} value={o.id}>
+            {o.nama}
+            </option>
+            ))}
+
+            </select>
           {/* PILIH PASANGAN */}
 
            {pasanganId && (
