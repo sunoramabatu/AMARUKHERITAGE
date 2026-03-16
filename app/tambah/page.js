@@ -13,15 +13,25 @@ export default function TambahAnggota() {
   const [nama, setNama] = useState("");
   const [jk, setJk] = useState("L");
   const [tahunLahir, setTahunLahir] = useState("");
-  const params = useSearchParams();
-  const defaultPasangan = params.get("pasangan");
-  const defaultOrangtua = params.get("orangtua");
+  
   const [daftarOrangtua, setDaftarOrangtua] = useState([]);
   const [imageSrc,setImageSrc] = useState(null);
   const [croppedBlob,setCroppedBlob] = useState(null);
   const [preview,setPreview] = useState(null);
-  const [orangtuaId,setOrangtuaId] = useState(defaultOrangtua || "");
-  const [pasanganId,setPasanganId] = useState(defaultPasangan || "");
+  const [orangtuaId,setOrangtuaId] = useState("");
+  const [pasanganId,setPasanganId] = useState("");
+
+  const params = useSearchParams();
+
+    useEffect(() => {
+
+      const orangtua = params.get("orangtua");
+      const pasangan = params.get("pasangan");
+
+      if(orangtua) setOrangtuaId(orangtua);
+      if(pasangan) setPasanganId(pasangan);
+
+    }, [params]);
   
   function handleFile(e){
 
