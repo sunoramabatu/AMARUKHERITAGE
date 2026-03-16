@@ -165,10 +165,11 @@ rootData.children.push(buildNode(child))
 // D3 TREE
 // =================
 
-const root = d3.hierarchy(rootData)
-
 const treeLayout = d3.tree()
-.nodeSize([300,260])
+.nodeSize([420,320])
+.separation((a,b)=>{
+return a.parent == b.parent ? 1.6 : 2.4
+});
 
 treeLayout(root)
 
