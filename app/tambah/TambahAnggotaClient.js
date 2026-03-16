@@ -22,26 +22,41 @@ export default function TambahAnggota() {
  
   const params = useSearchParams();
 
-    const orangtuaParam = params.get("orangtua");
     const pasanganParam = params.get("pasangan");
     const modeTambahAnak = !!orangtuaParam;
     const modeTambahPasangan = !!pasanganParam;
+    const [orangTuaData,setOrangTuaData] = useState(null)
+    const [pasanganData,setPasanganData] = useState(null)
+    const orangtuaParam = params.get("orangtua");
 
-    
+        useEffect(() => {
 
-    useEffect(()=>{
+        if(!orangtuaParam) return;
 
-        if(orangtuaParam){
+        async function setOrangtua(){
+
+        const { data } = await supabase
+        .from("anggota")
+        .select("jk")
+        .eq("id", orangtuaParam)
+        .single();
+
+        if(data?.jk === "L"){
         setAyahId(orangtuaParam)
         }
 
-        if(pasanganParam){
-        setPasanganId(pasanganParam)
+        if(data?.jk === "P"){
+        setIbuId(orangtuaParam)
         }
 
+        }
+
+        setOrangtua()
+
         },[])
-  
-  function handleFile(e){
+    
+
+    function handleFile(e){
 
     const file = e.target.files[0];
     if(!file) return;
@@ -69,20 +84,6 @@ export default function TambahAnggota() {
     setPreview(preview);
 
     }
-
-
-  useEffect(() => {
-    ambilOrangtua();
-  }, []);
-
-  async function ambilOrangtua() {
-    const { data } = await supabase
-      .from("anggota")
-      .select("id,nama,generasi,jk")
-
-    setDaftarOrangtua(data || []);
-  }
-
     async function handleSubmit(e) {
 e.preventDefault();
 
@@ -133,6 +134,16 @@ await supabase
 
 }
 
+// jika menambah pasangan
+if(pasanganId){
+
+await supabase
+.from("anggota")
+.update({ pasangan_id: data.id })
+.eq("id", pasanganId)
+
+}
+
 alert("Berhasil disimpan");
 window.location.href="/";
 
@@ -178,45 +189,7 @@ window.location.href="/";
 
           {/* PILIH ORANG TUA */}
 
-          <label className="font-semibold">Pilih Ayah</label>
-
-            <select
-            className="w-full border p-2 rounded"
-            value={ayahId}
-            onChange={(e)=>setAyahId(e.target.value)}
-            >
-
-            <option value="">Pilih Ayah</option>
-
-            {daftarOrangtua
-            .filter(o=>o.jk==="L")
-            .map(o=>(
-            <option key={o.id} value={o.id}>
-            {o.nama}
-            </option>
-            ))}
-
-            </select>
-
-            <label className="font-semibold">Pilih Ibu</label>
-
-            <select
-            className="w-full border p-2 rounded"
-            value={ibuId}
-            onChange={(e)=>setIbuId(e.target.value)}
-            >
-
-            <option value="">Pilih Ibu</option>
-
-            {daftarOrangtua
-            .filter(o=>o.jk==="P")
-            .map(o=>(
-            <option key={o.id} value={o.id}>
-            {o.nama}
-            </option>
-            ))}
-
-            </select>
+          
           {/* PILIH PASANGAN */}
 
            {pasanganId && (
@@ -244,54 +217,7 @@ window.location.href="/";
             </select>
 
             )}
-
-            {modeTambahAnak && (
-
-            <>
-
-            <label className="font-semibold">Pilih Ayah</label>
-
-            <select
-            className="w-full border p-2 rounded"
-            value={ayahId}
-            onChange={(e)=>setAyahId(e.target.value)}
-            >
-
-            <option value="">Pilih Ayah</option>
-
-            {daftarOrangtua
-            .filter(o=>o.jk==="L")
-            .map(o=>(
-            <option key={o.id} value={o.id}>
-            {o.nama}
-            </option>
-            ))}
-
-            </select>
-
-            <label className="font-semibold">Pilih Ibu</label>
-
-            <select
-            className="w-full border p-2 rounded"
-            value={ibuId}
-            onChange={(e)=>setIbuId(e.target.value)}
-            >
-
-            <option value="">Pilih Ibu</option>
-
-            {daftarOrangtua
-            .filter(o=>o.jk==="P")
-            .map(o=>(
-            <option key={o.id} value={o.id}>
-            {o.nama}
-            </option>
-            ))}
-
-            </select>
-
-            </>
-
-            )}
+            
          <div className="mb-4">
 
             <label className="block mb-2 font-semibold">
