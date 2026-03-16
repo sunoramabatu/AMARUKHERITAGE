@@ -190,14 +190,14 @@ window.location.href="/";
 
             <select
                 className="w-full border p-2 rounded"
-                value={ayahId}
-                onChange={(e)=>setAyahId(e.target.value)}
+                value={ibuId}
+                onChange={(e)=>setIbuId(e.target.value)}
                 >
 
-                <option value="">Pilih Ayah</option>
+                <option value="">Pilih Ibu</option>
 
                 {daftarOrangtua
-                .filter(o=>o.jk==="L")
+                .filter(o=>o.jk==="P")
                 .map(o=>(
                 <option key={o.id} value={o.id}>
                 {o.nama}
