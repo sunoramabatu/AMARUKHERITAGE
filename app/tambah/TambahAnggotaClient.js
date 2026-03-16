@@ -40,7 +40,22 @@ export default function TambahAnggota() {
 const [orangTuaData,setOrangTuaData] = useState(null)
 
 const [pasanganData,setPasanganData] = useState(null)
-        useEffect(()=>{
+
+   const params = useSearchParams();
+
+    const orangtuaParam = params.get("orangtua");
+
+    const pasanganParam = params.get("pasangan");
+    useEffect(()=>{
+    if(pasanganParam){
+        setPasanganId(pasanganParam)
+    }
+    },[pasanganParam])
+
+    const modeTambahAnak = !!orangtuaParam;
+    const modeTambahPasangan = !!pasanganParam;
+
+    useEffect(()=>{
 
         async function ambilPasangan(){
 
@@ -59,20 +74,6 @@ const [pasanganData,setPasanganData] = useState(null)
         ambilPasangan()
 
         },[pasanganParam])
-   
-   const params = useSearchParams();
-
-    const orangtuaParam = params.get("orangtua");
-
-    const pasanganParam = params.get("pasangan");
-    useEffect(()=>{
-    if(pasanganParam){
-        setPasanganId(pasanganParam)
-    }
-    },[pasanganParam])
-
-    const modeTambahAnak = !!orangtuaParam;
-    const modeTambahPasangan = !!pasanganParam;
    
         useEffect(() => {
 
@@ -252,7 +253,7 @@ window.location.href="/";
             >
 
           <option value="">
-            {pasanganData ? `Pasangan untuk ${pasanganData.nama}` : "Nama Pasangan"}
+            {pasanganData ? pasanganData.nama : "Nama Pasangan"}
             </option>
 
             {daftarOrangtua.map((o)=>(
