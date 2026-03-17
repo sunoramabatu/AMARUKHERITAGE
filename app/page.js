@@ -23,17 +23,17 @@ export default async function Home() {
       <header className="bg-[#66BB6A] text-white py-6">
         <div className="max-w-6xl mx-auto px-6">
 
-          <h1 className="text-3xl font-bold">
+          <h3 className="text-3xl font-bold">
             Jejak Keluarga Amari Rukmini
-          </h1>
+          </h3>
 
           <p className="text-sm mt-1">
             {totalGenerasi} Generasi • {totalAnggota} Anggota
           </p>
 
-          <h3 className="text-3xl font-bold">
+          <h1 className="text-3xl font-bold">
             UNTUK TAMBAH ANGGOTA KELUARGA, MASUKKAN DARI GARIS KETURUNAN AMARI RUKMINI
-          </h3>
+          </h1>
 
           <div className="hidden">
 
