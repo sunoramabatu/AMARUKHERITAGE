@@ -31,6 +31,10 @@ export default async function Home() {
             {totalGenerasi} Generasi • {totalAnggota} Anggota
           </p>
 
+          <h3 className="text-3xl font-bold">
+            UNTUK TAMBAH ANGGOTA KELUARGA, MASUKKAN DARI GARIS KETURUNAN AMARI RUKMINI
+          </h3>
+
           <div className="hidden">
 
             <Link
