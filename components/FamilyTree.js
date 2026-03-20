@@ -19,30 +19,7 @@ svg.selectAll("*").remove();
 
 const g=svg.append("g");
 
-window.addEventListener("searchKeluarga",(e)=>{
 
-const keyword = e.detail.toLowerCase()
-
-const found = root.descendants().find(d =>
-d.data?.nama?.toLowerCase().includes(keyword)
-)
-
-if(found){
-
-const x = found.x
-const y = found.y
-
-svg.transition().duration(700).call(
-zoom.transform,
-d3.zoomIdentity.translate(
-window.innerWidth/2 - x,
-200 - y
-).scale(1.2)
-)
-
-}
-
-})
 
 // ZOOM
 const zoom = d3.zoom()
@@ -366,6 +343,31 @@ group.append("line")
 if(d.data.type==="single"){
 
 drawPerson(group,d.data.person,0)
+
+}
+
+})
+
+window.addEventListener("searchKeluarga",(e)=>{
+
+const keyword = e.detail.toLowerCase()
+
+const found = root.descendants().find(d =>
+d.data?.nama?.toLowerCase().includes(keyword)
+)
+
+if(found){
+
+const x = found.x
+const y = found.y
+
+svg.transition().duration(700).call(
+zoom.transform,
+d3.zoomIdentity.translate(
+window.innerWidth/2 - x,
+200 - y
+).scale(1.2)
+)
 
 }
 
