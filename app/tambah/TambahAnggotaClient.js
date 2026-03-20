@@ -304,7 +304,7 @@ window.location.href="/";
 
           <button
             type="submit"
-            className="w-full bg-green-600 text-white font-semibold py-4 rounded-lg mt-6 mb-20 hover:bg-green-700"
+            className="w-full bg-green-600 text-white font-semibold py-4 rounded-lg mt-6 hover:bg-green-700"
             >
             Simpan Anggota
             </button>
