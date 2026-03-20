@@ -191,7 +191,7 @@ treeLayout(root)
 
 // AUTO CENTER TREE
 
-const svgWidth = window.innerWidth
+const svgWidth = typeof window !== "undefined" ? window.innerWidth : 1200
 const xOffset = svgWidth / 2 - 200
 
 g.attr("transform", `translate(${xOffset},80)`)
@@ -348,7 +348,54 @@ drawPerson(group,d.data.person,0)
 
 })
 
-window.addEventListener("searchKeluarga",(e)=>{
+if (typeof window !== "undefined") {
+
+const handler = (e)=>{
+
+const keyword = e.detail.toLowerCase()
+
+if(!keyword) return
+
+const found = root.descendants().find(d => {
+
+if(d.data.type === "single"){
+return d.data.person?.nama?.toLowerCase().includes(keyword)
+}
+
+if(d.data.type === "couple"){
+return (
+d.data.suami?.nama?.toLowerCase().includes(keyword) ||
+d.data.istri?.nama?.toLowerCase().includes(keyword)
+)
+}
+
+return false
+
+})
+
+if(found){
+
+const x = found.x
+const y = found.y
+
+svg.transition().duration(700).call(
+zoom.transform,
+d3.zoomIdentity.translate(
+window.innerWidth/2 - x,
+200 - y
+).scale(1.2)
+)
+
+}
+
+}
+
+window.addEventListener("searchKeluarga", handler)
+
+// cleanup biar aman
+return () => window.removeEventListener("searchKeluarga", handler)
+
+}
 
 const keyword = e.detail.toLowerCase()
 
