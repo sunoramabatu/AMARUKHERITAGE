@@ -283,7 +283,7 @@ const name=group.append("text")
 .attr("font-size",13)
 .attr("font-weight","bold")
 
-const words=person.nama.split(" ")
+const words=(person.nama || "").split(" ")
 let line=[]
 let tspan=name.append("tspan").attr("x",xOffset).attr("dy",0)
 
@@ -389,11 +389,15 @@ d3.zoomIdentity.translate(
 }
 
 // pasang listener
-window.addEventListener("searchKeluarga", handler)
+if (typeof window !== "undefined") {
+  window.addEventListener("searchKeluarga", handler)
+}
 
 // cleanup WAJIB di luar
 return () => {
-window.removeEventListener("searchKeluarga", handler)
+  if (typeof window !== "undefined") {
+    window.removeEventListener("searchKeluarga", handler)
+  }
 }
 
 },[keluarga])
