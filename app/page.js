@@ -1,6 +1,8 @@
 import { supabase } from "../lib/supabase";
 import Link from "next/link";
 import FamilyTreeWrapper from "../components/FamilyTreeWrapper";
+import SearchBox from "../components/SearchBox";
+
 
 export const dynamic = "force-dynamic";
 
@@ -35,20 +37,7 @@ export default async function Home() {
             UNTUK TAMBAH ANGGOTA KELUARGA, MASUKKAN DARI GARIS KETURUNAN AMARI RUKMINI
           </h1>
 
-          <div className="mt-4 flex justify-center">
-            <input
-              type="text"
-              placeholder="🔍 Cari nama anggota..."
-              className="w-full max-w-md px-4 py-2 rounded-lg border text-black"
-              onChange={(e)=>{
-                window.dispatchEvent(
-                  new CustomEvent("searchKeluarga",{
-                    detail:e.target.value
-                  })
-                )
-              }}
-            />
-          </div>
+          <SearchBox />
 
           <div className="hidden">
 
