@@ -348,57 +348,6 @@ drawPerson(group,d.data.person,0)
 
 })
 
-const handler = (e)=>{
-
-const keyword = e.detail?.toLowerCase()
-
-if(!keyword) return
-
-const found = root.descendants().find(d => {
-
-if(d.data.type === "single"){
-return d.data.person?.nama?.toLowerCase().includes(keyword)
-}
-
-if(d.data.type === "couple"){
-return (
-d.data.suami?.nama?.toLowerCase().includes(keyword) ||
-d.data.istri?.nama?.toLowerCase().includes(keyword)
-)
-}
-
-return false
-
-})
-
-if(found){
-
-const x = found.x
-const y = found.y
-
-svg.transition().duration(700).call(
-zoom.transform,
-d3.zoomIdentity.translate(
-(window.innerWidth || 1200)/2 - x,
-200 - y
-).scale(1.2)
-)
-
-}
-
-}
-
-// pasang listener
-if (typeof window !== "undefined") {
-  window.addEventListener("searchKeluarga", handler)
-}
-
-// cleanup WAJIB di luar
-return () => {
-  if (typeof window !== "undefined") {
-    window.removeEventListener("searchKeluarga", handler)
-  }
-}
 
 },[keluarga])
 
