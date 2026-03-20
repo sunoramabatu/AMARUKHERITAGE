@@ -348,11 +348,9 @@ drawPerson(group,d.data.person,0)
 
 })
 
-if (typeof window !== "undefined") {
-
 const handler = (e)=>{
 
-const keyword = e.detail.toLowerCase()
+const keyword = e.detail?.toLowerCase()
 
 if(!keyword) return
 
@@ -381,7 +379,7 @@ const y = found.y
 svg.transition().duration(700).call(
 zoom.transform,
 d3.zoomIdentity.translate(
-window.innerWidth/2 - x,
+(window.innerWidth || 1200)/2 - x,
 200 - y
 ).scale(1.2)
 )
@@ -390,11 +388,12 @@ window.innerWidth/2 - x,
 
 }
 
+// pasang listener
 window.addEventListener("searchKeluarga", handler)
 
-// cleanup biar aman
-return () => window.removeEventListener("searchKeluarga", handler)
-
+// cleanup WAJIB di luar
+return () => {
+window.removeEventListener("searchKeluarga", handler)
 }
 
 },[keluarga])
