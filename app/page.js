@@ -2,11 +2,16 @@ import { supabase } from "../lib/supabase";
 import Link from "next/link";
 import FamilyTreeWrapper from "../components/FamilyTreeWrapper";
 import SearchBox from "../components/SearchBox";
+import { useState } from "react";
+
+import SearchBox from "../components/SearchBox";
 
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
+
+  const [keyword, setKeyword] = useState("");
 
   const { data: keluarga } = await supabase
     .from("anggota")
@@ -37,7 +42,8 @@ export default async function Home() {
             UNTUK TAMBAH ANGGOTA KELUARGA, MASUKKAN DARI GARIS KETURUNAN AMARI RUKMINI
           </h1>
 
-          <SearchBox />
+          <SearchBox onSearch={setKeyword} />
+          <FamilyTreeWrapper keluarga={keluarga} keyword={keyword} />
 
           <div className="hidden">
 
@@ -56,6 +62,8 @@ export default async function Home() {
             </Link>
 
           </div>
+
+          
 
         </div>
       </header>
