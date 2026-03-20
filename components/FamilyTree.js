@@ -167,9 +167,22 @@ rootData.children.push(buildNode(child))
 const root = d3.hierarchy(rootData)
 
 const treeLayout = d3.tree()
-.nodeSize([260,300])
+.nodeSize([300,300])
 .separation((a,b)=>{
-return a.parent == b.parent ? 0.9 : 1.4
+
+const isCoupleA = a.data.type === "couple"
+const isCoupleB = b.data.type === "couple"
+
+const base = a.parent === b.parent ? 1 : 1.6
+
+// jika salah satu couple → kasih jarak lebih besar
+if(isCoupleA || isCoupleB){
+  return base * 1.6
+}
+
+// kalau dua-duanya single → rapatkan
+return base * 0.9
+
 });
 
 treeLayout(root)
