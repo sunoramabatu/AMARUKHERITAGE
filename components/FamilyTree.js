@@ -5,7 +5,8 @@ import * as d3 from "d3";
 import { useState } from "react";
 import EditAnggotaModal from "../components/EditAnggotaModal";
 
-export default function FamilyTree({ keluarga }) {
+export default function FamilyTree({ keluarga, keyword }) {
+
 
 const [selectedAnggota, setSelectedAnggota] = useState(null);
 const svgRef = useRef(null);
@@ -348,6 +349,50 @@ drawPerson(group,d.data.person,0)
 
 })
 
+useEffect(()=>{
+
+if(!keyword) return
+
+const found = d3.select(svgRef.current)
+.selectAll("g")
+.data()
+?.find(d => {
+
+if(!d?.data) return false
+
+if(d.data.type === "single"){
+return d.data.person?.nama?.toLowerCase().includes(keyword.toLowerCase())
+}
+
+if(d.data.type === "couple"){
+return (
+d.data.suami?.nama?.toLowerCase().includes(keyword.toLowerCase()) ||
+d.data.istri?.nama?.toLowerCase().includes(keyword.toLowerCase())
+)
+}
+
+return false
+
+})
+
+if(found){
+
+const x = found.x
+const y = found.y
+
+const svg = d3.select(svgRef.current)
+
+svg.transition().duration(700).call(
+d3.zoom().transform,
+d3.zoomIdentity.translate(
+(window.innerWidth || 1200)/2 - x,
+200 - y
+).scale(1.2)
+)
+
+}
+
+},[keyword])
 
 },[keluarga])
 
