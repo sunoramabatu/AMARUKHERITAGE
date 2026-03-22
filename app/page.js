@@ -4,8 +4,6 @@ import FamilyTreeWrapper from "../components/FamilyTreeWrapper";
 import SearchBox from "../components/SearchBox";
 import { useState } from "react";
 
-import SearchBox from "../components/SearchBox";
-
 
 export const dynamic = "force-dynamic";
 
@@ -41,8 +39,9 @@ export default async function Home() {
           <h1 className="text-3xl font-bold">
             UNTUK TAMBAH ANGGOTA KELUARGA, MASUKKAN DARI GARIS KETURUNAN AMARI RUKMINI
           </h1>
+          
 
-          <SearchBox onSearch={setKeyword} />
+          <SearchBox/>
           <FamilyTreeWrapper keluarga={keluarga} keyword={keyword} />
 
           <div className="hidden">

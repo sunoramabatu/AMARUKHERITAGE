@@ -5,7 +5,8 @@ import * as d3 from "d3";
 import { useState } from "react";
 import EditAnggotaModal from "../components/EditAnggotaModal";
 
-export default function FamilyTree({ keluarga, keyword }) {
+export default function FamilyTree({ keluarga }) {
+export default function FamilyTree({ keluarga, keyword }) 
 
 
 const [selectedAnggota, setSelectedAnggota] = useState(null);
@@ -351,20 +352,21 @@ drawPerson(group,d.data.person,0)
 
 useEffect(()=>{
 
-if(!keyword || !svgRef.current) return
+const handler = (e)=>{
 
-const lower = keyword.toLowerCase()
+const keyword = e.detail?.toLowerCase()
+if(!keyword) return
 
 const found = root.descendants().find(d => {
 
 if(d.data.type === "single"){
-return d.data.person?.nama?.toLowerCase().includes(lower)
+return d.data.person?.nama?.toLowerCase().includes(keyword)
 }
 
 if(d.data.type === "couple"){
 return (
-d.data.suami?.nama?.toLowerCase().includes(lower) ||
-d.data.istri?.nama?.toLowerCase().includes(lower)
+d.data.suami?.nama?.toLowerCase().includes(keyword) ||
+d.data.istri?.nama?.toLowerCase().includes(keyword)
 )
 }
 
@@ -377,8 +379,6 @@ if(found){
 const x = found.x
 const y = found.y
 
-const svg = d3.select(svgRef.current)
-
 svg.transition().duration(700).call(
 zoom.transform,
 d3.zoomIdentity.translate(
@@ -389,7 +389,15 @@ d3.zoomIdentity.translate(
 
 }
 
-},[keyword])
+}
+
+window.addEventListener("searchKeluarga", handler)
+
+return () => {
+window.removeEventListener("searchKeluarga", handler)
+}
+
+},[])
 
 },[keluarga])
 
