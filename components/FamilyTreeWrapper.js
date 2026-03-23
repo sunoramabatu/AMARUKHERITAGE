@@ -5,6 +5,6 @@ const FamilyTree = dynamic(
   { ssr: false }
 );
 
-export default function FamilyTreeWrapper({ keluarga, keyword }) {
-  return <FamilyTree keluarga={keluarga} keyword={keyword} />;
+export default function FamilyTreeWrapper({ keluarga }) {
+  return <FamilyTree keluarga={keluarga} />;
 }

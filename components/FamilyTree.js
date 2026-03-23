@@ -6,22 +6,18 @@ import { useState } from "react";
 import EditAnggotaModal from "../components/EditAnggotaModal";
 
 export default function FamilyTree({ keluarga }) {
-export default function FamilyTree({ keluarga, keyword }) 
-
 
 const [selectedAnggota, setSelectedAnggota] = useState(null);
 const svgRef = useRef(null);
 
 useEffect(()=>{
 
-if(!keluarga || keluarga.length===0) return;
+if(!keluarga || !svgRef.current) return;
 
-const svg=d3.select(svgRef.current);
+const svg = d3.select(svgRef.current);
 svg.selectAll("*").remove();
 
-const g=svg.append("g");
-
-
+const g = svg.append("g");
 
 // ZOOM
 const zoom = d3.zoom()
@@ -350,8 +346,6 @@ drawPerson(group,d.data.person,0)
 
 })
 
-useEffect(()=>{
-
 const handler = (e)=>{
 
 const keyword = e.detail?.toLowerCase()
@@ -395,9 +389,7 @@ window.addEventListener("searchKeluarga", handler)
 
 return () => {
 window.removeEventListener("searchKeluarga", handler)
-}
-
-},[])
+} 
 
 },[keluarga])
 
