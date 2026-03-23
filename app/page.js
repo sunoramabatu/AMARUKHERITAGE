@@ -2,16 +2,14 @@ import { supabase } from "../lib/supabase";
 import Link from "next/link";
 import FamilyTreeWrapper from "../components/FamilyTreeWrapper";
 import SearchBox from "../components/SearchBox";
-import { useState } from "react";
+
 
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
 
-  const [keyword, setKeyword] = useState("");
-
-  const { data: keluarga } = await supabase
+    const { data: keluarga } = await supabase
     .from("anggota")
     .select("*");
 
@@ -42,7 +40,7 @@ export default async function Home() {
           
 
           <SearchBox/>
-          <FamilyTreeWrapper keluarga={keluarga} keyword={keyword} />
+         
 
           <div className="hidden">
 
