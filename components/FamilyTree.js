@@ -373,12 +373,17 @@ if(found){
 const x = found.x
 const y = found.y
 
+const svgWidth = window.innerWidth
+const svgHeight = window.innerHeight
+
 svg.transition().duration(700).call(
 zoom.transform,
-d3.zoomIdentity.translate(
-(window.innerWidth || 1200)/2 - x,
-200 - y
-).scale(1.2)
+d3.zoomIdentity
+.translate(
+svgWidth / 2 - found.x,
+svgHeight / 2 - found.y
+)
+.scale(1.3)
 )
 
 }
