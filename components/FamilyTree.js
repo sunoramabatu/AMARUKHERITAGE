@@ -376,12 +376,14 @@ const y = found.y
 const svgWidth = window.innerWidth
 const svgHeight = window.innerHeight
 
+const HEADER_OFFSET = 140
+
 svg.transition().duration(700).call(
 zoom.transform,
 d3.zoomIdentity
 .translate(
-svgWidth / 2 - found.x,
-svgHeight / 2 - found.y
+window.innerWidth / 2 - found.x,
+(window.innerHeight - HEADER_OFFSET) / 2 - found.y
 )
 .scale(1.3)
 )
