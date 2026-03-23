@@ -385,7 +385,7 @@ d3.zoomIdentity
 window.innerWidth / 2 - found.x,
 (window.innerHeight - HEADER_OFFSET) / 2 - found.y
 )
-.scale(1.3)
+.scale(0.5)
 )
 
 }
